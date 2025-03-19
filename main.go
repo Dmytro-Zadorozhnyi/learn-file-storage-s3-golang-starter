@@ -7,8 +7,6 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"strings"
-	"time"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
@@ -30,23 +28,23 @@ type apiConfig struct {
 	s3Client         *s3.Client
 }
 
-func (cfg *apiConfig) dbVideoToSignedVideo(video database.Video) (database.Video, error) {
-	if video.VideoURL != nil {
-		spl := strings.Split(*video.VideoURL, ",")
-		bucket := spl[0]
-		v_key := spl[1]
-		if bucket == "" || v_key == "" {
-			return video, fmt.Errorf("failed to parse video URL")
-		}
-		pre_url, err := generatePresignedURL(cfg.s3Client, bucket, v_key, time.Minute*30)
-		if err != nil {
-			return video, err
-		}
-		video.VideoURL = &pre_url
-	}
+// func (cfg *apiConfig) dbVideoToSignedVideo(video database.Video) (database.Video, error) {
+// 	if video.VideoURL != nil {
+// 		spl := strings.Split(*video.VideoURL, ",")
+// 		bucket := spl[0]
+// 		v_key := spl[1]
+// 		if bucket == "" || v_key == "" {
+// 			return video, fmt.Errorf("failed to parse video URL")
+// 		}
+// 		pre_url, err := generatePresignedURL(cfg.s3Client, bucket, v_key, time.Minute*30)
+// 		if err != nil {
+// 			return video, err
+// 		}
+// 		video.VideoURL = &pre_url
+// 	}
 
-	return video, nil
-}
+// 	return video, nil
+// }
 
 //var videoThumbnails = map[uuid.UUID]thumbnail{}
 
